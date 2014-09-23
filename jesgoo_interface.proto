@@ -1,73 +1,255 @@
-//Copyright 2014 Jesgoo Inc. All Rights Reserved.
-//
-//The interface of advertisement request and response
-//
+package jesgoo.protocol;
 
-package jesgoo.interface
 
-message BidRequest {
-	//appsid, 
-	required string appsid = 1;
-	//user ip
-	optional string ip = 2;
-	//user-agent
-	optional string user_agent = 3;
-	//operation system [android, ios]
-	optional string os = 4;
-	//operation system version
-	optional string osv = 5;
-	//device IMEI
-	optional string imei = 6;
-	//device mac address format(AA:AA:AA:AA:AA)
-	optional string mac = 7;
-	//device idfa
-	optional string idfa = 8;
-	//android advertisig id
-	optional string aaid = 9;
-	//device open udid
-	optional string udid = 10;
-	//MMC+MNC
-	optional string nop = 11;
-	//if wifi request [0:nowifi req,1:wifi req]
-	optional int swi = 12;
-	//wifi location info,format {mac}_{signal strength}
-	optional string wi = 13;
-	//gps info, format {timestamp}_{longitude}_{latitude}
-	optional string gps = 14;
-	//package name, the source of the request
-	optional string pkg = 15;
+// 枚举类型声明部分
+
+// 设备类型
+enum DeviceType {
+	DEV_UNKNOWN = 0;  // 未知设备类型
+	PC = 1;  // 台式与笔记本
+	DEV_PHONE = 2;  // 智能电话
+	TABLET = 3;  // 平板
+	TV = 4;  // 智能电视与机顶盒
 }
 
-message BidResponse {
-	//searchid of the response . It's uniq in each response
-	required string searchid = 1;
+// 媒体类型
+enum MediaType {
+	APP = 1;  // 应用
+	WEB = 2;  // 传统站点
+	WAP = 3;  // 移动站点
+}
 
-	// advertisement struct
+// 操作系统类型
+enum OSType {
+	OS_UNKNOWN = 0;  // 未知操作系统
+	ANDROID = 1;  // Android
+	IOS = 2;  // iOS
+	WP = 3;  // Windows Phone
+}
+
+// 设备ID类型
+enum DeviceIDType {
+	IMEI = 1;  // IMEI
+	MAC = 2;  // MAC
+	IDFA = 3;  // IDFA (iOS)
+	AAID = 4;  // Android Advertising ID
+	OPENUDID = 5;  // Open UDID
+	ANDROIDID = 6;  // Android ID
+	UDID = 7;  // UDID (iOS)
+	ODIN = 8;  // ODIN
+	DUID = 9;  // DUID (Windows Phone)
+}
+
+// 广告位类型
+enum AdSlotType {
+	BANNER = 1;  // 横幅
+	OFFERWALL = 2;  // 积分墙
+	RECOMMEND = 3;  // 推荐位
+	INTERSTITIAL = 4;  // 插屏
+	REALTIME_SPLASH = 5; // 实时开屏
+	CACHED_SPLASH = 6;  // 缓存开屏
+	FEED = 7;  // 信息流
+}
+
+// 广告风格
+enum AdStyle {
+	TEXT = 1;  // 文本
+	IMAGE = 2;  // 图片
+	ICON_TEXT = 3;  // 图文
+	SMART_AD = 4;  // 智能创意
+	VIDEO = 5;  // 视频
+}
+
+// 广告推广类型
+enum PromotionType {
+	NOACTION = 0;  // 无推广动作
+	LP = 1;  // 继续访问
+	DOWNLOAD = 2;  // 下载应用
+	PRO_PHONE = 3;  // 拨打电话
+	SMS = 4;  // 发送短信
+	EMAIL = 5;  // 发送邮件
+}
+
+// 网络类型
+enum NetworkType {
+	WIFI = 1;  // Wi-Fi
+	CELLULAR_UNKNOWN = 2;  // 未知移动网络
+	CELLULAR_2G = 3;  // 2G移动网络
+	CELLULAR_3G = 4;  // 3G移动网络
+	CELLULAR_4G = 5;  // 4G移动网络
+}
+
+// 地理坐标类型
+enum GeoType {
+	WGS84 = 1;  // 国际标准
+	GCJ02 = 2;  // 国测局标准
+	BD09 = 3;  // 百度标准
+}
+
+// 广告客户端类型
+enum ClientType {
+	NATIVESDK = 1;  // 原生SDK
+	JSSDK = 2;  // JSSDK
+	OPENAPI = 3;  // 开放API
+}
+
+// 地理定位来源
+enum GeoSource {
+	NATIVE = 1;  // 系统原生API
+	BAIDU = 2;  // 百度地图SDK
+}
+
+
+// 基础数据结构体类型声明部分
+
+// 通用版本类型
+message Version {
+	required uint32 major = 1;  // 主版本号
+	optional uint32 minor = 2 [default = 0];  // 次版本号
+	optional uint32 micro = 3 [default = 0];  // 三位版本号
+	optional uint32 build = 4 [default = 0];  // 四位版本号
+}
+
+// 通用尺寸类型
+message Size {
+	required uint32 width = 1;  // 宽度
+	required uint32 height = 2;  // 高度
+}
+
+// 应用信息
+// 联盟自有流量请求可不携带分类信息
+message App {
+	required string package_name = 1;  // 包名
+	repeated uint32 categories = 2;  // 分类
+}
+
+// 站点信息
+// 联盟自有流量请求可不携带分类信息
+message Site {
+	required bytes domain = 1;  // 域名
+	repeated uint32 categories = 2;  // 分类
+	optional bytes url = 3;  // 页面URL
+}
+
+// 浏览器
+message Browser {
+	optional string user_agent = 1;  // User-Agent
+}
+
+// 媒体信息
+message Media {
+	required string id = 1;  // 媒体ID
+	required string channel_id = 2;  // 渠道ID
+	required MediaType type = 3;  // 媒体类型
+	optional App app = 4;  // 应用
+	optional Site site = 5;  // 站点
+	optional Browser browser = 6;  // 浏览器
+}
+
+// WiFi热点
+message WiFi {
+	required string mac = 1;  // MAC地址
+	required int32 rssi = 2;  // 信号强度
+}
+
+// 网络环境
+message Network {
+	optional string ip = 1;  // IPv4
+	optional NetworkType type = 2;  // 网络连接类型
+	optional uint32 cellular_operator = 3;  // 运营商
+	optional string cellular_id = 4;  // 基站ID
+	repeated WiFi wifis = 5;  // 周边WiFi热点
+}
+
+// 设备ID
+// 精简ID针对有辅助字符的ID类型，如MAC和IDFA
+message DeviceID {
+	required DeviceIDType type = 1;  // 类型
+	required bytes id = 2;  // ID
+	optional bool compact = 3 [default = false];  // 是否精简
+	optional bool md5 = 4 [default = false];  // 是否MD5签名
+}
+
+// 设备信息
+message Device {
+	required DeviceType type = 1;  // 设备类型
+	repeated DeviceID ids = 2;  // 可用设备ID列表
+	required OSType os_type = 3;  // 操作系统类型
+	required Version os_version = 4;  // 操作系统版本
+	optional string brand = 5;  // 品牌
+	optional string model = 6;  // 型号
+	optional Size screen_size = 7;  // 屏幕尺寸
+	optional double screen_density = 8;  // 屏幕像素密度
+}
+
+// 设备
+message Geo {
+	required GeoType type = 1;  // 地理坐标类型
+	required double longitude = 2;  // 经度
+	required double latitude = 3;  // 纬度
+	optional uint32 timestampe = 4;  // 时间戳
+	optional GeoSource source = 5;  // 定位信息来源
+}
+
+// 广告客户端
+message Client {
+	required ClientType type = 1;  // 客户端类型
+	required Version version = 2;  // 客户端版本
+}
+
+// 广告位信息
+message AdSlot {
+	required string id = 1;  // 广告位ID
+	required AdSlotType type = 2;  // 广告位类型
+	required Size size = 3;  // 广告位尺寸
+	repeated AdStyle styles = 4;  // 可支持广告风格
+	optional uint32 capacity = 5 [default = 1];  // 广告容量
+	repeated uint32 templates = 6;  // 可支持模板
+	repeated PromotionType promotions = 7;  // 可支持推广类型
+}
+
+// 广告原生信息
+message AdMaterial {
+	required string id = 1; // 广告ID
+	optional int32 height = 2; //广告高
+	optional int32 width  = 3; //广告宽
+	optional int32 catefory = 4; //广告分类
+	optional string title = 5; //广告标题
+	optional string image = 6; //广告图片url
+	optional string logo = 7; //广告logo url
+	optional string show_notice = 8; //广告展现通知url
+}
+// 扩展特征结构体类型声明部分
+// 扩展特征结构体类型声明结束 
+
+// 卖方请求
+message SellerRequest {
+	required Media media = 1;  // 媒体
+	required Device device = 2;  // 设备
+	required Network network = 3;  // 网络
+	required Client client = 4;  // 广告客户端
+	optional Geo geo = 5;  // 地理定位
+	repeated AdSlot adslots = 6;  // 广告位
+
+	// 特殊标记字段，从100开始编号
+	optional bool debug = 101; // 调试请求标记
+}
+
+// 卖方应答
+message SellerResponse {
+	// 广告内容
 	message Ad {
-		//id of each ad/creative
-		optional int64 creative_id = 1;
-		//max cpm , chinese fen unit
-		optional int32 max_cpm = 2;
-		//html snippet
-		optional string html_snippet = 3;
-		//ad height
-		optional int32 height = 4;
-		//ad width
-		optional int32 width = 5;
-		//ad category
-		optional int32 category = 6;
-		//ad click url
-		optional string target_url = 7;
-		//ad title
-		optional string title = 8;
-		//ad pic url
-		optional string image = 9;
-		//ad logo url
-		optional string logp = 10;
-		//ad show notification
-		optional string show_notice = 11;
+		required string adslot_id = 1;  // 广告位ID
+		enum AdRespType {
+			HTML = 0;	//HTML 返回
+			DYNAMIC = 1; //原生广告信息返回
+		}
+		required AdRespType ad_resp_type = 2; // 广告返回形式
+		optional bytes html_snippet = 3;  // HTML广告内容,返回形式为HTML时有效
+		optional AdMaterial ad_material = 4; // 广告原生信息,返回形式为DYNAMIC时有效
 	}
 
-	//ad response . The num of ad maybe larger than 1
-	repeated Ad ad = 3;
+	required bool success = 1;  // 检索成功标志
+	repeated Ad ads = 2;  // 应答广告内容
+	optional string search_id = 3;  // 检索ID
 }
