@@ -1,0 +1,73 @@
+//Copyright 2014 Jesgoo Inc. All Rights Reserved.
+//
+//The interface of advertisement request and response
+//
+
+package jesgoo.interface
+
+message BidRequest {
+	//appsid, 
+	required string appsid = 1;
+	//user ip
+	optional string ip = 2;
+	//user-agent
+	optional string user_agent = 3;
+	//operation system [android, ios]
+	optional string os = 4;
+	//operation system version
+	optional string osv = 5;
+	//device IMEI
+	optional string imei = 6;
+	//device mac address format(AA:AA:AA:AA:AA)
+	optional string mac = 7;
+	//device idfa
+	optional string idfa = 8;
+	//android advertisig id
+	optional string aaid = 9;
+	//device open udid
+	optional string udid = 10;
+	//MMC+MNC
+	optional string nop = 11;
+	//if wifi request [0:nowifi req,1:wifi req]
+	optional int swi = 12;
+	//wifi location info,format {mac}_{signal strength}
+	optional string wi = 13;
+	//gps info, format {timestamp}_{longitude}_{latitude}
+	optional string gps = 14;
+	//package name, the source of the request
+	optional string pkg = 15;
+}
+
+message BidResponse {
+	//searchid of the response . It's uniq in each response
+	required string searchid = 1;
+
+	// advertisement struct
+	message Ad {
+		//id of each ad/creative
+		optional int64 creative_id = 1;
+		//max cpm , chinese fen unit
+		optional int32 max_cpm = 2;
+		//html snippet
+		optional string html_snippet = 3;
+		//ad height
+		optional int32 height = 4;
+		//ad width
+		optional int32 width = 5;
+		//ad category
+		optional int32 category = 6;
+		//ad click url
+		optional string target_url = 7;
+		//ad title
+		optional string title = 8;
+		//ad pic url
+		optional string image = 9;
+		//ad logo url
+		optional string logp = 10;
+		//ad show notification
+		optional string show_notice = 11;
+	}
+
+	//ad response . The num of ad maybe larger than 1
+	repeated Ad ad = 3;
+}
