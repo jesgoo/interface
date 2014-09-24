@@ -1,5 +1,12 @@
+// Jesgoo API
 package jesgoo.protocol;
 
+// Jesgoo API接口使用说明
+// Jesgoo API使用HTTP协议POST方法通信，请求地址为http://api.jesgoo.com/v1/protobuf
+// 请求消息体为SellerRequest的二进制序列化结果，应答消息体为SellerResponse的二进制序列化结果。
+// 
+// 【设备ID要求】
+// 必须使用
 
 // 枚举类型声明部分
 
@@ -209,18 +216,18 @@ message AdSlot {
 }
 
 // 广告原生信息
-message AdMaterial {
-	required string id = 1; // 广告ID
-	optional int32 height = 2; //广告高
-	optional int32 width  = 3; //广告宽
-	optional int32 catefory = 4; //广告分类
-	optional string title = 5; //广告标题
-	optional string image = 6; //广告图片url
-	optional string logo = 7; //广告logo url
-	optional string show_notice = 8; //广告展现通知url
+message AdNativeMaterial {
+	required string id = 1;  // 广告ID
+	optional string title = 2;  // 标题
+	optional string description1 = 3;  // 描述1
+	optional string description2 = 4;  // 描述2
+	optional string image_url = 5;  // 图片物料URL
+	optional Size image_size = 6;  // 图片物料尺寸
+	optional string logo_url = 7;  // 图标物料URL
+	optional Size logo_size = 8;  // 图标物料尺寸
+	optional string click_url = 9;  // 点击URL
+	optional string impression_log_url = 10;  // 展现日志URL
 }
-// 扩展特征结构体类型声明部分
-// 扩展特征结构体类型声明结束 
 
 // 卖方请求
 message SellerRequest {
@@ -240,13 +247,13 @@ message SellerResponse {
 	// 广告内容
 	message Ad {
 		required string adslot_id = 1;  // 广告位ID
-		enum AdRespType {
-			HTML = 0;	//HTML 返回
-			DYNAMIC = 1; //原生广告信息返回
+		enum MaterialType {
+			DYNAMIC = 0;  //HTML格式动态创意
+			NATIVE = 1;  //原生广告物料
 		}
-		required AdRespType ad_resp_type = 2; // 广告返回形式
-		optional bytes html_snippet = 3;  // HTML广告内容,返回形式为HTML时有效
-		optional AdMaterial ad_material = 4; // 广告原生信息,返回形式为DYNAMIC时有效
+		required MaterialType material_type = 2;  // 物料类型
+		optional bytes html_snippet = 3;  // 动态创意物料内容，物料类型为DYNAMIC时有效
+		optional AdNativeMaterial native_material = 4;  // 原生广告物料内容，物料类型为NATIVE时有效
 	}
 
 	required bool success = 1;  // 检索成功标志
