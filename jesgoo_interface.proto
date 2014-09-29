@@ -56,6 +56,7 @@ enum AdSlotType {
 	REALTIME_SPLASH = 5; // 实时开屏
 	CACHED_SPLASH = 6;  // 缓存开屏
 	FEED = 7;  // 信息流
+	PUSH = 8;  // 推送
 }
 
 // 广告风格
