@@ -1,5 +1,5 @@
 // Jesgoo API
-package jesgoo.protocol;
+package jesgoo.interface;
 
 // Jesgoo API接口使用说明
 // Jesgoo API使用HTTP协议POST方法通信，请求地址为http://api.jesgoo.com/v1/protobuf
