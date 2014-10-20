@@ -136,7 +136,7 @@ message App {
 		SYSTEM = 1;  // 系统应用
 		PRE_INSTALLED = 2;  // 刷机渠道预安装
 	}
-	optional InstallType install_type;  // 应用安装类型，默认为“用户安装”
+	optional InstallType install_type = 3;  // 应用安装类型，默认为“用户安装”
 }
 
 // 站点信息
