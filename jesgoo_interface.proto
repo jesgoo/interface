@@ -239,7 +239,7 @@ message AdNativeMaterial {
 	optional string logo_url = 7;  // 图标物料URL
 	optional Size logo_size = 8;  // 图标物料尺寸
 	optional string click_url = 9;  // 点击URL
-	optional string impression_log_url = 10;  // 展现日志URL
+	repeated string impression_log_url = 10;  // 展现日志URL
 }
 
 // 卖方请求
