@@ -228,6 +228,17 @@ message AdSlot {
 	repeated PromotionType promotions = 7;  // 可支持推广类型
 }
 
+//广告动作
+enum InteractionType {
+	NO_INTERACTION = 0 ;
+	INTER_SURFING = 1 ;
+	INTER_DOWNLOAD = 2 ;
+	INTER_DIALING = 3 ;
+	INTER_MESSAGE = 4;
+	INTER_MAIL = 5;
+	
+}
+
 // 广告原生信息
 message AdNativeMaterial {
 	required string id = 1;  // 广告ID
@@ -240,6 +251,7 @@ message AdNativeMaterial {
 	optional Size logo_size = 8;  // 图标物料尺寸
 	optional string click_url = 9;  // 点击URL
 	repeated string impression_log_url = 10;  // 展现日志URL
+	optional InteractionType interactor = 11; // 广告动作
 }
 
 // 卖方请求
